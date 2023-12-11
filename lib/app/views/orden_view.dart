@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyecto_final/app/components/customCheckbox.dart';
 import 'package:proyecto_final/app/components/etiqueta.dart';
 import 'package:proyecto_final/app/models/orden.dart';
 
@@ -11,7 +12,7 @@ class OrdenView extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(),
-        body: Column(
+        body: ListView(
           children: [
             _TituloHoja(ordenData: ordenData),
             const _Separador(
@@ -22,16 +23,273 @@ class OrdenView extends StatelessWidget {
               titulo: 'DATOS DEL CFEMATICO',
             ),
             _DatosCfematico(ordenData: ordenData),
-            const Card(
+            _DetalleServicio(ordenData: ordenData),
+            _Mantenimiento(ordenData: ordenData),
+            Card(
               child: Padding(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   children: [
-                    Text('DETALLE SERVICIO'),
+                    const Center(
+                      child: Text('Pruebas'),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text('VERIFICAR COMUNICACION CON MONITOREO:'),
+                        CustomCheckBox(
+                            checked: ordenData.verificarComunicacionMonitoreo)
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text('VERIFICAR COMUNICACION CON SICOM:'),
+                        CustomCheckBox(
+                            checked: ordenData.verificarComunicacionSicom)
+                      ],
+                    ),
+                    // Falta pruebas dispensado de monedas
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text('PRUEBA ACEPTACION DE BILLETES:'),
+                        CustomCheckBox(
+                            checked: ordenData.preubasAceptacionBilletes),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text('PRUEBAS DE IMPRESION:'),
+                        CustomCheckBox(checked: ordenData.pruebasImpresion),
+                      ],
+                    ),
                   ],
                 ),
               ),
             )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Mantenimiento extends StatelessWidget {
+  const _Mantenimiento({
+    super.key,
+    required this.ordenData,
+  });
+
+  final OrdenData ordenData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Center(
+              child: Text('MANTENIMEINTO'),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('MANTENIMEINTO DE GABINIETE:'),
+                CustomCheckBox(checked: ordenData.mantenimientoGabinete)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('ORGANIZCION Y ESTADO DE CABLEADO:'),
+                CustomCheckBox(checked: ordenData.mantenimientoGabinete)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('MANTENIMIENTO A PC:'),
+                CustomCheckBox(checked: ordenData.mantenimientoPc),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('MANTENIMIENTO A MONITOR:'),
+                CustomCheckBox(checked: ordenData.mantenimientoMonitor)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('MANTENIMIENTO ESCANER:'),
+                CustomCheckBox(checked: ordenData.mantenimientoEscaner)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('MANTENIMIENTO IMPRESORA:'),
+                CustomCheckBox(checked: ordenData.mantenimientoImpresora)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('MANTENIMIETO INTERFAZ:'),
+                CustomCheckBox(checked: ordenData.mantenimientoTarjetaInterfaz)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('MANTENIMIENTO TONELEROS:'),
+                CustomCheckBox(checked: ordenData.mantenimientoToneleros)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('MANTENIMIENTO DISPENSADOR DE BILLETES:'),
+                CustomCheckBox(
+                    checked: ordenData.mantenimientoDispensadorBilletes)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('MANTENIMIENTO ACEPTADOR DE BILLETES:'),
+                CustomCheckBox(
+                    checked: ordenData.mantenimientoAceptadorBilletes)
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('MANTENIMIENTO ACEPTADOR DE MONEDAS:'),
+                CustomCheckBox(checked: ordenData.mantenimientoAceptadorMonedas)
+              ],
+            ),
+            // Falta dato verificacion de la ultima version liberada BOOL
+            Etiqueta(
+              titulo: 'VERSION LIBERADA: ',
+              texto: ordenData.verificacionUltimaVersionLiberada,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('ACTUALIZACION DE ANTIVIRUS:'),
+                CustomCheckBox(
+                  checked: ordenData.actualizacionAntivirusCorporativo,
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('VERIFICAR FECHA Y HORA CORRECTA:'),
+                CustomCheckBox(checked: ordenData.verificaFechaHora),
+              ],
+            ),
+            Row(
+              children: [
+                const Text('REVISION UPS:'),
+                CustomCheckBox(checked: ordenData.ups.estado),
+              ],
+            ),
+            ordenData.ups.estado
+                ? Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Voltaje de entrada: '),
+                          Etiqueta(
+                            titulo: 'NT:',
+                            texto: ordenData.ups.voltajesEntrada.nt,
+                          ),
+                          Etiqueta(
+                            titulo: 'NF:',
+                            texto: ordenData.ups.voltajesEntrada.nf,
+                          ),
+                          Etiqueta(
+                            titulo: 'TF:',
+                            texto: ordenData.ups.voltajesEntrada.tf,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Voltaje de salida: '),
+                          Etiqueta(
+                            titulo: 'NT:',
+                            texto: ordenData.ups.voltajesSalida.nt,
+                          ),
+                          Etiqueta(
+                            titulo: 'NF:',
+                            texto: ordenData.ups.voltajesSalida.nf,
+                          ),
+                          Etiqueta(
+                            titulo: 'TF:',
+                            texto: ordenData.ups.voltajesSalida.tf,
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DetalleServicio extends StatelessWidget {
+  const _DetalleServicio({
+    super.key,
+    required this.ordenData,
+  });
+
+  final OrdenData ordenData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Center(
+              child: Text(
+                'DETALLE SERVICIO',
+              ),
+            ),
+            Row(
+              children: [
+                const Text('PREVENTIVO COMPLETO:'),
+                CustomCheckBox(checked: ordenData.preventivoCompleto),
+                const Text('CORRECTIVO:'),
+                CustomCheckBox(checked: ordenData.correctivo),
+              ],
+            ),
+            Etiqueta(titulo: 'No. De Ticket: ', texto: ordenData.noOrden),
+            const SizedBox(
+              height: 12,
+            ),
+            Etiqueta(
+                titulo: 'Fecha y hora de otorgamiento: ',
+                texto: '${ordenData.fecha} ${ordenData.horaInicio}'),
           ],
         ),
       ),

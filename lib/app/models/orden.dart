@@ -5,17 +5,18 @@ OrdenData ordenFromJson(String str) => OrdenData.fromJson(json.decode(str));
 String ordenToJson(OrdenData data) => json.encode(data.toJson());
 
 class OrdenData {
-  int id;
   String noOrden;
-  String zona;
   String empresa;
+  String zona;
   String agencia;
-  String fecha;
+  DateTime fecha;
   String horaInicio;
   String horaTermino;
   String noEquipo;
   String noEquipoSerie;
   String noInventario;
+  bool preventivoCompleto;
+  bool correctivo;
   bool verificarComunicacionMonitoreo;
   bool verificarComunicacionSicom;
   bool preubasAceptacionBilletes;
@@ -37,6 +38,9 @@ class OrdenData {
   bool mantenimientoDispensadorBilletes;
   bool mantenimientoAceptadorBilletes;
   bool mantenimientoAceptadorMonedas;
+  Ups ups;
+  List<Refacione> refaciones;
+  String observaciones;
   String verificacionUltimaVersionLiberada;
   bool actualizacionAntivirusCorporativo;
   bool verificaFechaHora;
@@ -45,10 +49,9 @@ class OrdenData {
   String calidadServicio;
 
   OrdenData({
-    required this.id,
     required this.noOrden,
-    required this.zona,
     required this.empresa,
+    required this.zona,
     required this.agencia,
     required this.fecha,
     required this.horaInicio,
@@ -56,6 +59,8 @@ class OrdenData {
     required this.noEquipo,
     required this.noEquipoSerie,
     required this.noInventario,
+    required this.preventivoCompleto,
+    required this.correctivo,
     required this.verificarComunicacionMonitoreo,
     required this.verificarComunicacionSicom,
     required this.preubasAceptacionBilletes,
@@ -77,6 +82,9 @@ class OrdenData {
     required this.mantenimientoDispensadorBilletes,
     required this.mantenimientoAceptadorBilletes,
     required this.mantenimientoAceptadorMonedas,
+    required this.ups,
+    required this.refaciones,
+    required this.observaciones,
     required this.verificacionUltimaVersionLiberada,
     required this.actualizacionAntivirusCorporativo,
     required this.verificaFechaHora,
@@ -86,17 +94,18 @@ class OrdenData {
   });
 
   factory OrdenData.fromJson(Map<String, dynamic> json) => OrdenData(
-        id: json["id"],
         noOrden: json["noOrden"],
-        zona: json["zona"],
         empresa: json["empresa"],
+        zona: json["zona"],
         agencia: json["agencia"],
-        fecha: json["fecha"],
+        fecha: DateTime.parse(json["fecha"]),
         horaInicio: json["horaInicio"],
         horaTermino: json["horaTermino"],
         noEquipo: json["noEquipo"],
         noEquipoSerie: json["noEquipoSerie"],
         noInventario: json["noInventario"],
+        preventivoCompleto: json["preventivoCompleto"],
+        correctivo: json["correctivo"],
         verificarComunicacionMonitoreo: json["verificarComunicacionMonitoreo"],
         verificarComunicacionSicom: json["verificarComunicacionSicom"],
         preubasAceptacionBilletes: json["preubasAceptacionBilletes"],
@@ -119,6 +128,10 @@ class OrdenData {
             json["mantenimientoDispensadorBilletes"],
         mantenimientoAceptadorBilletes: json["mantenimientoAceptadorBilletes"],
         mantenimientoAceptadorMonedas: json["mantenimientoAceptadorMonedas"],
+        ups: Ups.fromJson(json["ups"]),
+        refaciones: List<Refacione>.from(
+            json["refaciones"].map((x) => Refacione.fromJson(x))),
+        observaciones: json["observaciones"],
         verificacionUltimaVersionLiberada:
             json["verificacionUltimaVersionLiberada"],
         actualizacionAntivirusCorporativo:
@@ -130,17 +143,19 @@ class OrdenData {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
         "noOrden": noOrden,
-        "zona": zona,
         "empresa": empresa,
+        "zona": zona,
         "agencia": agencia,
-        "fecha": fecha,
+        "fecha":
+            "${fecha.year.toString().padLeft(4, '0')}-${fecha.month.toString().padLeft(2, '0')}-${fecha.day.toString().padLeft(2, '0')}",
         "horaInicio": horaInicio,
         "horaTermino": horaTermino,
         "noEquipo": noEquipo,
         "noEquipoSerie": noEquipoSerie,
         "noInventario": noInventario,
+        "preventivoCompleto": preventivoCompleto,
+        "correctivo": correctivo,
         "verificarComunicacionMonitoreo": verificarComunicacionMonitoreo,
         "verificarComunicacionSicom": verificarComunicacionSicom,
         "preubasAceptacionBilletes": preubasAceptacionBilletes,
@@ -162,11 +177,90 @@ class OrdenData {
         "mantenimientoDispensadorBilletes": mantenimientoDispensadorBilletes,
         "mantenimientoAceptadorBilletes": mantenimientoAceptadorBilletes,
         "mantenimientoAceptadorMonedas": mantenimientoAceptadorMonedas,
+        "ups": ups.toJson(),
+        "refaciones": List<dynamic>.from(refaciones.map((x) => x.toJson())),
+        "observaciones": observaciones,
         "verificacionUltimaVersionLiberada": verificacionUltimaVersionLiberada,
         "actualizacionAntivirusCorporativo": actualizacionAntivirusCorporativo,
         "verificaFechaHora": verificaFechaHora,
         "aceptaMantenimiento": aceptaMantenimiento,
         "detalleServicio": detalleServicio,
         "calidadServicio": calidadServicio,
+      };
+}
+
+class Refacione {
+  String nombre;
+  String noSerie;
+  String instalado;
+  String retirado;
+
+  Refacione({
+    required this.nombre,
+    required this.noSerie,
+    required this.instalado,
+    required this.retirado,
+  });
+
+  factory Refacione.fromJson(Map<String, dynamic> json) => Refacione(
+        nombre: json["nombre"],
+        noSerie: json["noSerie"],
+        instalado: json["instalado"],
+        retirado: json["retirado"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "nombre": nombre,
+        "noSerie": noSerie,
+        "instalado": instalado,
+        "retirado": retirado,
+      };
+}
+
+class Ups {
+  bool estado;
+  Voltajes voltajesEntrada;
+  Voltajes voltajesSalida;
+
+  Ups({
+    required this.estado,
+    required this.voltajesEntrada,
+    required this.voltajesSalida,
+  });
+
+  factory Ups.fromJson(Map<String, dynamic> json) => Ups(
+        estado: json["estado"],
+        voltajesEntrada: Voltajes.fromJson(json["voltajesEntrada"]),
+        voltajesSalida: Voltajes.fromJson(json["voltajesSalida"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "estado": estado,
+        "voltajesEntrada": voltajesEntrada.toJson(),
+        "voltajesSalida": voltajesSalida.toJson(),
+      };
+}
+
+class Voltajes {
+  String nt;
+  String nf;
+  String tf;
+
+  Voltajes({
+    required this.nt,
+    required this.nf,
+    required this.tf,
+  });
+
+  factory Voltajes.fromJson(Map<String, dynamic> json) => Voltajes(
+        nt: json["nt"],
+        nf: json["nf"],
+        tf: json["tf"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "nt": nt,
+        "nf": nf,
+        "tf": tf,
       };
 }
