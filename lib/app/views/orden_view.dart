@@ -25,51 +25,193 @@ class OrdenView extends StatelessWidget {
             _DatosCfematico(ordenData: ordenData),
             _DetalleServicio(ordenData: ordenData),
             _Mantenimiento(ordenData: ordenData),
+            _Pruebas(ordenData: ordenData),
+            _RefaccionesList(refacciones: ordenData.refaciones),
+            _Observaciones(ordenData: ordenData),
             Card(
               child: Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Center(
-                      child: Text('Pruebas'),
-                    ),
+                    const _Separador(titulo: 'PARA SER LLENADO POR CFE'),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Text('VERIFICAR COMUNICACION CON MONITOREO:'),
-                        CustomCheckBox(
-                            checked: ordenData.verificarComunicacionMonitoreo)
+                        const Text('Se acepta mantenimiento:'),
+                        CustomCheckBox(checked: ordenData.aceptaMantenimiento)
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    Column(
                       children: [
-                        const Text('VERIFICAR COMUNICACION CON SICOM:'),
-                        CustomCheckBox(
-                            checked: ordenData.verificarComunicacionSicom)
-                      ],
-                    ),
-                    // Falta pruebas dispensado de monedas
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Text('PRUEBA ACEPTACION DE BILLETES:'),
-                        CustomCheckBox(
-                            checked: ordenData.preubasAceptacionBilletes),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Text('PRUEBAS DE IMPRESION:'),
-                        CustomCheckBox(checked: ordenData.pruebasImpresion),
+                        Etiqueta(
+                            titulo: 'Calidad del servicio: ',
+                            texto: ordenData.calidadServicio)
                       ],
                     ),
                   ],
                 ),
               ),
             )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Observaciones extends StatelessWidget {
+  const _Observaciones({
+    super.key,
+    required this.ordenData,
+  });
+
+  final OrdenData ordenData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const _Separador(titulo: 'OBSERVACIONES'),
+            Text(
+              ordenData.observaciones,
+              style: const TextStyle(
+                fontSize: 16.0,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RefaccionesList extends StatelessWidget {
+  final List<Refacione> refacciones;
+
+  const _RefaccionesList({required this.refacciones});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const _Separador(
+            titulo: 'REFACCIONES Y MATERIAL UTILIZADO',
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              columnSpacing: 35,
+              columns: const [
+                DataColumn(
+                  label: Text('Nombre'),
+                ),
+                DataColumn(
+                  label: Text('No.Serie'),
+                ),
+                DataColumn(
+                  label: Text('Instalado'),
+                ),
+                DataColumn(
+                  label: Text('Retirado'),
+                )
+              ],
+              rows: refacciones.map((refaccion) {
+                return DataRow(
+                  cells: [
+                    DataCell(
+                      Text(refaccion.nombre),
+                    ),
+                    DataCell(
+                      Text(refaccion.noSerie),
+                    ),
+                    DataCell(
+                      Text(refaccion.instalado.toString()),
+                    ),
+                    DataCell(
+                      Text(refaccion.retirado.toString()),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Pruebas extends StatelessWidget {
+  const _Pruebas({
+    super.key,
+    required this.ordenData,
+  });
+
+  final OrdenData ordenData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Center(
+              child: Text('Pruebas'),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('VERIFICAR COMUNICACION CON MONITOREO:'),
+                CustomCheckBox(
+                    checked: ordenData.verificarComunicacionMonitoreo),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('VERIFICAR COMUNICACION CON SICOM:'),
+                CustomCheckBox(checked: ordenData.verificarComunicacionSicom)
+              ],
+            ),
+            // Falta pruebas dispensado de monedas
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('PRUEBA ACEPTACION DE BILLETES:'),
+                CustomCheckBox(
+                  checked: ordenData.preubasAceptacionBilletes,
+                ),
+              ],
+            ),
+            Etiqueta(
+              titulo: '',
+              texto: ordenData.preubasAceptacionBilletesDesc,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('PRUEBAS DE ACEPTADO DE MONEDAS:'),
+                CustomCheckBox(checked: ordenData.pruebasDispensadoMonedas),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('PRUEBAS DE IMPRESION:'),
+                CustomCheckBox(checked: ordenData.pruebasImpresion),
+              ],
+            ),
+            Etiqueta(
+                titulo: 'DIAGNOSTICO FALLAS:',
+                texto: ordenData.diagnosticoFallas)
           ],
         ),
       ),
@@ -176,10 +318,7 @@ class _Mantenimiento extends StatelessWidget {
               ],
             ),
             // Falta dato verificacion de la ultima version liberada BOOL
-            Etiqueta(
-              titulo: 'VERSION LIBERADA: ',
-              texto: ordenData.verificacionUltimaVersionLiberada,
-            ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -188,6 +327,10 @@ class _Mantenimiento extends StatelessWidget {
                   checked: ordenData.actualizacionAntivirusCorporativo,
                 )
               ],
+            ),
+            Etiqueta(
+              titulo: 'VERSION LIBERADA: ',
+              texto: ordenData.verificacionUltimaVersionLiberada,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
