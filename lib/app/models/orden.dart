@@ -41,6 +41,7 @@ class OrdenData {
   Ups ups;
   List<Refacione> refaciones;
   String observaciones;
+  // bool estadoUltimaVerificacionLiberada;
   String verificacionUltimaVersionLiberada;
   bool actualizacionAntivirusCorporativo;
   bool verificaFechaHora;
@@ -85,6 +86,7 @@ class OrdenData {
     required this.ups,
     required this.refaciones,
     required this.observaciones,
+    // this.estadoUltimaVerificacionLiberada = false,
     required this.verificacionUltimaVersionLiberada,
     required this.actualizacionAntivirusCorporativo,
     required this.verificaFechaHora,
@@ -196,10 +198,10 @@ class Refacione {
   String retirado;
 
   Refacione({
-    required this.nombre,
-    required this.noSerie,
-    required this.instalado,
-    required this.retirado,
+    this.nombre = '',
+    this.noSerie = '',
+    this.instalado = '',
+    this.retirado = '',
   });
 
   factory Refacione.fromJson(Map<String, dynamic> json) => Refacione(
@@ -223,10 +225,11 @@ class Ups {
   Voltajes voltajesSalida;
 
   Ups({
-    required this.estado,
-    required this.voltajesEntrada,
-    required this.voltajesSalida,
-  });
+    this.estado = false,
+    Voltajes? voltajesEntrada,
+    Voltajes? voltajesSalida,
+  })  : voltajesEntrada = voltajesEntrada ?? Voltajes(nf: '', tf: '', nt: ''),
+        voltajesSalida = voltajesSalida ?? Voltajes(nf: '', tf: '', nt: '');
 
   factory Ups.fromJson(Map<String, dynamic> json) => Ups(
         estado: json["estado"],

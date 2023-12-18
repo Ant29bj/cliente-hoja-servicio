@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:proyecto_final/app/components/etiqueta.dart';
 import 'package:proyecto_final/app/models/orden.dart';
 import 'package:proyecto_final/app/services/hoja_servicio_provider.dart';
+import 'package:proyecto_final/app/views/crear_orden.dart';
 import 'package:proyecto_final/app/views/orden_view.dart';
 
 class App extends StatelessWidget {
@@ -25,7 +26,13 @@ class App extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              print('En construccion');
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return CrearOrden();
+                  },
+                ),
+              );
             },
             child: const Icon(Icons.add),
           ),
