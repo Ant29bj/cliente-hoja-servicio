@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:proyecto_final/app/components/etiqueta.dart';
 import 'package:proyecto_final/app/components/separador.dart';
 import 'package:proyecto_final/app/models/orden.dart';
+import 'package:proyecto_final/app/repository/orden_repository.dart';
 
 class CrearOrden extends StatefulWidget {
   const CrearOrden({super.key});
@@ -17,28 +18,28 @@ class _CrearOrdenState extends State<CrearOrden> {
   List<Refacione> refaccionesVacias = [];
 
   OrdenData ordenData = OrdenData(
-    noOrden: '',
-    empresa: '',
-    zona: '',
-    agencia: '',
+    noOrden: ' ',
+    empresa: ' ',
+    zona: ' ',
+    agencia: ' ',
     fecha: DateTime.now(),
-    horaInicio: '',
-    horaTermino: '',
-    noEquipo: '',
-    noEquipoSerie: '',
-    noInventario: '',
+    horaInicio: ' ',
+    horaTermino: ' ',
+    noEquipo: ' ',
+    noEquipoSerie: ' ',
+    noInventario: ' ',
     preventivoCompleto: false,
     correctivo: false,
     verificarComunicacionMonitoreo: false,
     verificarComunicacionSicom: false,
     preubasAceptacionBilletes: false,
-    preubasAceptacionBilletesDesc: '',
+    preubasAceptacionBilletesDesc: ' ',
     pruebasDispensadoMonedas: false,
-    pruebasDispensadoMonedasDesc: '',
+    pruebasDispensadoMonedasDesc: ' ',
     preubasDispensadoBilletes: false,
-    pruebasDispensadoBilletesDesc: '',
+    pruebasDispensadoBilletesDesc: ' ',
     pruebasImpresion: false,
-    diagnosticoFallas: '',
+    diagnosticoFallas: ' ',
     mantenimientoGabinete: false,
     organizacionEstadoCableado: false,
     mantenimientoPc: false,
@@ -50,14 +51,16 @@ class _CrearOrdenState extends State<CrearOrden> {
     mantenimientoDispensadorBilletes: false,
     mantenimientoAceptadorBilletes: false,
     mantenimientoAceptadorMonedas: false,
+    pruebasAceptadorMonedas: false,
     ups: Ups(),
-    refaciones: List.empty(),
-    observaciones: '',
-    verificacionUltimaVersionLiberada: '',
+    refaciones: [],
+    observaciones: ' ',
+    verificacionUltimaVersionLiberada: ' ',
     actualizacionAntivirusCorporativo: false,
     verificaFechaHora: false,
     aceptaMantenimiento: false,
-    detalleServicio: '',
+    estadoVerificacionUltimaVersionLiberada: false,
+    detalleServicio: ' ',
     calidadServicio: 'BUENO',
   );
 
@@ -561,6 +564,7 @@ class _CrearOrdenState extends State<CrearOrden> {
                                   children: [
                                     Flexible(
                                       child: TextFormField(
+                                        enabled: ordenData.ups.estado,
                                         onSaved: (value) {
                                           ordenData.ups.voltajesEntrada.nt =
                                               value!;
@@ -583,6 +587,7 @@ class _CrearOrdenState extends State<CrearOrden> {
                                     ),
                                     Flexible(
                                       child: TextFormField(
+                                        enabled: ordenData.ups.estado,
                                         onSaved: (value) {
                                           ordenData.ups.voltajesEntrada.nf =
                                               value!;
@@ -605,6 +610,7 @@ class _CrearOrdenState extends State<CrearOrden> {
                                     ),
                                     Flexible(
                                       child: TextFormField(
+                                        enabled: ordenData.ups.estado,
                                         onSaved: (value) {
                                           ordenData.ups.voltajesEntrada.tf =
                                               value!;
@@ -640,6 +646,7 @@ class _CrearOrdenState extends State<CrearOrden> {
                                   children: [
                                     Flexible(
                                       child: TextFormField(
+                                        enabled: ordenData.ups.estado,
                                         onSaved: (value) {
                                           ordenData.ups.voltajesSalida.nt =
                                               value!;
@@ -662,6 +669,7 @@ class _CrearOrdenState extends State<CrearOrden> {
                                     ),
                                     Flexible(
                                       child: TextFormField(
+                                        enabled: ordenData.ups.estado,
                                         onSaved: (value) {
                                           ordenData.ups.voltajesSalida.nf =
                                               value!;
@@ -684,6 +692,7 @@ class _CrearOrdenState extends State<CrearOrden> {
                                     ),
                                     Flexible(
                                       child: TextFormField(
+                                        enabled: ordenData.ups.estado,
                                         onSaved: (value) {
                                           ordenData.ups.voltajesSalida.tf =
                                               value!;
@@ -716,9 +725,14 @@ class _CrearOrdenState extends State<CrearOrden> {
                                           ),
                                         ),
                                         Checkbox(
-                                          value: true,
+                                          value: ordenData
+                                              .estadoVerificacionUltimaVersionLiberada,
                                           onChanged: (value) {
-                                            value = value!;
+                                            setState(() {
+                                              ordenData
+                                                      .estadoVerificacionUltimaVersionLiberada =
+                                                  value!;
+                                            });
                                           },
                                         ),
                                       ],
@@ -727,7 +741,8 @@ class _CrearOrdenState extends State<CrearOrden> {
                                       height: 10,
                                     ),
                                     TextFormField(
-                                      enabled: false,
+                                      enabled: ordenData
+                                          .estadoVerificacionUltimaVersionLiberada,
                                       decoration: const InputDecoration(
                                         labelText: 'Version Liberada',
                                         hintText: 'v2.14.5.1',
@@ -747,9 +762,14 @@ class _CrearOrdenState extends State<CrearOrden> {
                                   ),
                                 ),
                                 Checkbox(
-                                  value: true,
+                                  value: ordenData
+                                      .actualizacionAntivirusCorporativo,
                                   onChanged: (value) {
-                                    value = value!;
+                                    setState(() {
+                                      ordenData
+                                              .actualizacionAntivirusCorporativo =
+                                          value!;
+                                    });
                                   },
                                 ),
                               ],
@@ -764,9 +784,11 @@ class _CrearOrdenState extends State<CrearOrden> {
                                   ),
                                 ),
                                 Checkbox(
-                                  value: true,
+                                  value: ordenData.verificaFechaHora,
                                   onChanged: (value) {
-                                    value = value!;
+                                    setState(() {
+                                      ordenData.verificaFechaHora = value!;
+                                    });
                                   },
                                 ),
                               ],
@@ -788,9 +810,13 @@ class _CrearOrdenState extends State<CrearOrden> {
                                   'VERIFICAR COMUNICACION CON MONITOREO:',
                                 ),
                                 Checkbox(
-                                  value: true,
+                                  value:
+                                      ordenData.verificarComunicacionMonitoreo,
                                   onChanged: (value) {
-                                    value = value!;
+                                    setState(() {
+                                      ordenData.verificarComunicacionMonitoreo =
+                                          value!;
+                                    });
                                   },
                                 ),
                               ],
@@ -805,9 +831,12 @@ class _CrearOrdenState extends State<CrearOrden> {
                                   ),
                                 ),
                                 Checkbox(
-                                  value: true,
+                                  value: ordenData.verificarComunicacionSicom,
                                   onChanged: (value) {
-                                    value = value!;
+                                    setState(() {
+                                      ordenData.verificarComunicacionSicom =
+                                          value!;
+                                    });
                                   },
                                 ),
                               ],
@@ -822,9 +851,12 @@ class _CrearOrdenState extends State<CrearOrden> {
                                   ),
                                 ),
                                 Checkbox(
-                                  value: true,
+                                  value: ordenData.pruebasAceptadorMonedas,
                                   onChanged: (value) {
-                                    value = value!;
+                                    setState(() {
+                                      ordenData.pruebasAceptadorMonedas =
+                                          value!;
+                                    });
                                   },
                                 ),
                               ],
@@ -839,9 +871,12 @@ class _CrearOrdenState extends State<CrearOrden> {
                                   ),
                                 ),
                                 Checkbox(
-                                  value: true,
+                                  value: ordenData.preubasAceptacionBilletes,
                                   onChanged: (value) {
-                                    value = value!;
+                                    setState(() {
+                                      ordenData.preubasAceptacionBilletes =
+                                          value!;
+                                    });
                                   },
                                 ),
                               ],
@@ -856,9 +891,12 @@ class _CrearOrdenState extends State<CrearOrden> {
                                   ),
                                 ),
                                 Checkbox(
-                                  value: true,
+                                  value: ordenData.pruebasDispensadoMonedas,
                                   onChanged: (value) {
-                                    value = value!;
+                                    setState(() {
+                                      ordenData.pruebasDispensadoMonedas =
+                                          value!;
+                                    });
                                   },
                                 ),
                               ],
@@ -873,9 +911,12 @@ class _CrearOrdenState extends State<CrearOrden> {
                                   ),
                                 ),
                                 Checkbox(
-                                  value: true,
+                                  value: ordenData.preubasDispensadoBilletes,
                                   onChanged: (value) {
-                                    value = value!;
+                                    setState(() {
+                                      ordenData.preubasDispensadoBilletes =
+                                          value!;
+                                    });
                                   },
                                 ),
                               ],
@@ -890,7 +931,7 @@ class _CrearOrdenState extends State<CrearOrden> {
                                   ),
                                 ),
                                 Checkbox(
-                                  value: true,
+                                  value: false,
                                   onChanged: (value) {
                                     value = value!;
                                   },
@@ -907,9 +948,11 @@ class _CrearOrdenState extends State<CrearOrden> {
                                   ),
                                 ),
                                 Checkbox(
-                                  value: true,
+                                  value: ordenData.pruebasImpresion,
                                   onChanged: (value) {
-                                    value = value!;
+                                    setState(() {
+                                      ordenData.pruebasImpresion = value!;
+                                    });
                                   },
                                 ),
                               ],
@@ -917,6 +960,9 @@ class _CrearOrdenState extends State<CrearOrden> {
                             Padding(
                               padding: const EdgeInsets.all(16),
                               child: TextFormField(
+                                onSaved: (value) {
+                                  ordenData.diagnosticoFallas = value!;
+                                },
                                 maxLines: null,
                                 keyboardType: TextInputType.multiline,
                                 decoration: const InputDecoration(
@@ -933,6 +979,9 @@ class _CrearOrdenState extends State<CrearOrden> {
                       child: Padding(
                         padding: const EdgeInsets.all(16),
                         child: TextFormField(
+                          onSaved: (newValue) {
+                            ordenData.observaciones = newValue!;
+                          },
                           maxLines: null,
                           keyboardType: TextInputType.multiline,
                           decoration: const InputDecoration(
@@ -957,9 +1006,11 @@ class _CrearOrdenState extends State<CrearOrden> {
                                   ),
                                 ),
                                 Checkbox(
-                                  value: true,
+                                  value: ordenData.aceptaMantenimiento,
                                   onChanged: (value) {
-                                    value = value!;
+                                    setState(() {
+                                      ordenData.aceptaMantenimiento = value!;
+                                    });
                                   },
                                 ),
                               ],
@@ -1004,6 +1055,9 @@ class _CrearOrdenState extends State<CrearOrden> {
                             const SnackBar(content: Text('Processing Data')),
                           );
                           _formKey.currentState?.save();
+
+                          OrdenRepository ordenRepository = OrdenRepository();
+                          ordenRepository.createHoja(ordenData);
                         }
                       },
                       child: const Text('Guardar'),

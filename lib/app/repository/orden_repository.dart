@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:proyecto_final/app/models/orden.dart';
 import 'package:http/http.dart' as http;
 // import 'package:dio/dio.dart';
@@ -17,7 +18,43 @@ class OrdenRepository {
           jsonData.map((json) => OrdenData.fromJson(json)).toList();
       return ordenes;
     } else {
-      throw Exception('Error al obtener las ordens');
+      List<OrdenData> ordenes = [];
+      return ordenes;
     }
+  }
+
+  // Future<void> createHoja(OrdenData ordendata) async {
+  //   var urlPrueba =
+  //       Uri.https('ms-servicio-hoja.onrender.com', '/hoja_servicio');
+  //   var body = ordendata.toJson();
+  //   print(body);
+
+  //   try {
+  //     var response = await http.post(urlPrueba, body: body);
+  //     if (response.statusCode == 201) {
+  //       print('Éxito');
+  //     } else {
+  //       print('Fallo: ${response.statusCode}');
+  //       print(response.body);
+  //     }
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
+
+  void createHoja(OrdenData ordenData) async {
+    final dio = Dio();
+    String url = "https://ms-servicio-hoja.onrender.com/hoja_servicio";
+    var body = ordenData.toJson();
+    print(body);
+    Response res = await dio
+        .post(
+      url,
+      data: body,
+      options: Options(headers: {"Content-Type": "application/json"}),
+    )
+        .catchError((err) {
+      print('Error ${err}');
+    });
   }
 }

@@ -21,6 +21,7 @@ class OrdenData {
   bool verificarComunicacionSicom;
   bool preubasAceptacionBilletes;
   String preubasAceptacionBilletesDesc;
+  bool pruebasAceptadorMonedas;
   bool pruebasDispensadoMonedas;
   dynamic pruebasDispensadoMonedasDesc;
   bool preubasDispensadoBilletes;
@@ -41,7 +42,7 @@ class OrdenData {
   Ups ups;
   List<Refacione> refaciones;
   String observaciones;
-  // bool estadoUltimaVerificacionLiberada;
+  bool estadoVerificacionUltimaVersionLiberada;
   String verificacionUltimaVersionLiberada;
   bool actualizacionAntivirusCorporativo;
   bool verificaFechaHora;
@@ -63,6 +64,7 @@ class OrdenData {
     required this.preventivoCompleto,
     required this.correctivo,
     required this.verificarComunicacionMonitoreo,
+    required this.pruebasAceptadorMonedas,
     required this.verificarComunicacionSicom,
     required this.preubasAceptacionBilletes,
     required this.preubasAceptacionBilletesDesc,
@@ -86,7 +88,7 @@ class OrdenData {
     required this.ups,
     required this.refaciones,
     required this.observaciones,
-    // this.estadoUltimaVerificacionLiberada = false,
+    required this.estadoVerificacionUltimaVersionLiberada,
     required this.verificacionUltimaVersionLiberada,
     required this.actualizacionAntivirusCorporativo,
     required this.verificaFechaHora,
@@ -126,6 +128,7 @@ class OrdenData {
         mantenimientoImpresora: json["mantenimientoImpresora"],
         mantenimientoTarjetaInterfaz: json["mantenimientoTarjetaInterfaz"],
         mantenimientoToneleros: json["mantenimientoToneleros"],
+        pruebasAceptadorMonedas: json["pruebasAceptadorMonedas"],
         mantenimientoDispensadorBilletes:
             json["mantenimientoDispensadorBilletes"],
         mantenimientoAceptadorBilletes: json["mantenimientoAceptadorBilletes"],
@@ -136,6 +139,8 @@ class OrdenData {
         observaciones: json["observaciones"],
         verificacionUltimaVersionLiberada:
             json["verificacionUltimaVersionLiberada"],
+        estadoVerificacionUltimaVersionLiberada:
+            json["estadoVerificacionUltimaVersionLiberada"],
         actualizacionAntivirusCorporativo:
             json["actualizacionAntivirusCorporativo"],
         verificaFechaHora: json["verificaFechaHora"],
@@ -161,6 +166,7 @@ class OrdenData {
         "verificarComunicacionMonitoreo": verificarComunicacionMonitoreo,
         "verificarComunicacionSicom": verificarComunicacionSicom,
         "preubasAceptacionBilletes": preubasAceptacionBilletes,
+        "pruebasAceptadorMonedas": pruebasAceptadorMonedas,
         "preubasAceptacionBilletesDesc": preubasAceptacionBilletesDesc,
         "pruebasDispensadoMonedas": pruebasDispensadoMonedas,
         "pruebasDispensadoMonedasDesc": pruebasDispensadoMonedasDesc,
@@ -180,8 +186,11 @@ class OrdenData {
         "mantenimientoAceptadorBilletes": mantenimientoAceptadorBilletes,
         "mantenimientoAceptadorMonedas": mantenimientoAceptadorMonedas,
         "ups": ups.toJson(),
-        "refaciones": List<dynamic>.from(refaciones.map((x) => x.toJson())),
+        "refaciones":
+            List<dynamic>.from(refaciones.map((x) => x.toJson())).toList(),
         "observaciones": observaciones,
+        "estadoVerificacionUltimaVersionLiberada":
+            estadoVerificacionUltimaVersionLiberada,
         "verificacionUltimaVersionLiberada": verificacionUltimaVersionLiberada,
         "actualizacionAntivirusCorporativo": actualizacionAntivirusCorporativo,
         "verificaFechaHora": verificaFechaHora,
