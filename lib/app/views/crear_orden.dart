@@ -64,7 +64,8 @@ class _CrearOrdenState extends State<CrearOrden> {
     calidadServicio: 'BUENO',
   );
 
-  String opcionSeleccionada = 'BUENO';
+  String calidadServicio = 'BUENO';
+  String detalleServicio = 'CORRECTIVO';
 
   void showTimePickerInicio() {
     showTimePicker(
@@ -446,7 +447,7 @@ class _CrearOrdenState extends State<CrearOrden> {
                                   value: ordenData.mantenimientoImpresora,
                                   onChanged: (value) {
                                     setState(() {
-                                      ordenData.mantenimientoEscaner = value!;
+                                      ordenData.mantenimientoImpresora = value!;
                                     });
                                   },
                                 ),
@@ -1023,10 +1024,10 @@ class _CrearOrdenState extends State<CrearOrden> {
                                 children: [
                                   const Text('Calidad del servicio:'),
                                   DropdownButton<String>(
-                                    value: opcionSeleccionada,
+                                    value: calidadServicio,
                                     onChanged: (String? newValue) {
                                       setState(() {
-                                        opcionSeleccionada = newValue!;
+                                        calidadServicio = newValue!;
                                       });
                                     },
                                     items: <String>['BUENO', 'REGULAR', 'MALO']
@@ -1041,6 +1042,35 @@ class _CrearOrdenState extends State<CrearOrden> {
                                 ],
                               ),
                             ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text('Detalle servicio:'),
+                                  DropdownButton<String>(
+                                    value: detalleServicio,
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        detalleServicio = newValue!;
+                                        ordenData.detalleServicio = newValue;
+                                      });
+                                    },
+                                    items: <String>[
+                                      'PREVENTIVO_COMPLETO',
+                                      'CORRECTIVO'
+                                    ].map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ],
+                              ),
+                            )
                           ],
                         ),
                       ),

@@ -17,11 +17,12 @@ class HojaProvider with ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
+      _ordenRepository.getAllOrdenes();
 
       _ordenList = await _ordenRepository.getAllOrden();
     } catch (error) {
       fetchOrdenLista();
-      // Manejar el error según tus necesidades
+      print(error);
     } finally {
       _isLoading = false;
       notifyListeners();

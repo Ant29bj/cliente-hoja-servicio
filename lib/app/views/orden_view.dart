@@ -42,10 +42,19 @@ class OrdenView extends StatelessWidget {
                       ],
                     ),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Etiqueta(
-                            titulo: 'Calidad del servicio: ',
-                            texto: ordenData.calidadServicio)
+                          titulo: 'Calidad del servicio: ',
+                          texto: ordenData.calidadServicio,
+                        ),
+                        const SizedBox(
+                          height: 25,
+                        ),
+                        Etiqueta(
+                          titulo: 'Calidad del servicio: ',
+                          texto: ordenData.detalleServicio,
+                        )
                       ],
                     ),
                   ],
