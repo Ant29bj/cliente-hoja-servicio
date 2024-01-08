@@ -979,6 +979,63 @@ class _CrearOrdenState extends State<CrearOrden> {
                     Card(
                       child: Padding(
                         padding: const EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text('Reffacciones'),
+                                IconButton(
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AgregarOrden(
+                                              ordenData: this.ordenData,
+                                              onRefaccionChanged:
+                                                  (newRefacciones) {
+                                                setState(() {
+                                                  this.ordenData.refaciones =
+                                                      newRefacciones;
+                                                });
+                                              },
+                                            );
+                                          });
+                                    },
+                                    icon: const Icon(Icons.add))
+                              ],
+                            ),
+                            DataTable(
+                              columns: const [
+                                DataColumn(
+                                  label: Text('Nombre'),
+                                ),
+                                DataColumn(
+                                  label: Text('No.Serie'),
+                                ),
+                                DataColumn(
+                                  label: Text('Instalado'),
+                                ),
+                                DataColumn(
+                                  label: Text('retirado'),
+                                )
+                              ],
+                              rows: ordenData.refaciones.map((orden) {
+                                return DataRow(cells: [
+                                  DataCell(Text(orden.nombre)),
+                                  DataCell(Text(orden.noSerie)),
+                                  DataCell(Text(orden.instalado)),
+                                  DataCell(Text(orden.retirado)),
+                                ]);
+                              }).toList(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
                         child: TextFormField(
                           onSaved: (newValue) {
                             ordenData.observaciones = newValue!;
@@ -1096,6 +1153,108 @@ class _CrearOrdenState extends State<CrearOrden> {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AgregarOrden extends StatefulWidget {
+  final OrdenData ordenData;
+  final Function(List<Refacione>) onRefaccionChanged;
+  final Refacione? refaccionExistente; // Nuevo parámetro para manejar edición
+
+  const AgregarOrden({
+    required this.ordenData,
+    required this.onRefaccionChanged,
+    this.refaccionExistente,
+  });
+  @override
+  State<AgregarOrden> createState() => _AgregarOrdenState();
+}
+
+class _AgregarOrdenState extends State<AgregarOrden> {
+  var nombreController = TextEditingController();
+  var noSerieController = TextEditingController();
+  var instaladoController = TextEditingController();
+  var retiradoController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    nombreController = TextEditingController();
+    noSerieController = TextEditingController();
+    instaladoController = TextEditingController();
+    retiradoController = TextEditingController();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Form(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Separador(titulo: 'Agregar Refaccion'),
+            TextFormField(
+              controller: nombreController,
+              decoration: const InputDecoration(labelText: 'Nombre'),
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: noSerieController,
+              decoration: const InputDecoration(labelText: 'No de Serie'),
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: instaladoController,
+              decoration: const InputDecoration(labelText: 'Instalado'),
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: retiradoController,
+              decoration: const InputDecoration(labelText: 'Retirado'),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final nombre = nombreController.text;
+                final noSerie = noSerieController.text;
+                final instalado = instaladoController.text;
+                final retirado = retiradoController.text;
+                Refacione refaccion = Refacione();
+
+                refaccion.instalado = instalado;
+                refaccion.nombre = nombre;
+                refaccion.noSerie = noSerie;
+                refaccion.retirado = retirado;
+
+                if (widget.refaccionExistente != null) {
+                  final index = widget.ordenData.refaciones
+                      .indexOf(widget.refaccionExistente!);
+                  setState(() {
+                    widget.ordenData.refaciones[index] = refaccion;
+                  });
+                } else {
+                  setState(() {
+                    widget.ordenData.refaciones.add(refaccion);
+                  });
+                }
+
+                nombreController.clear();
+                noSerieController.clear();
+                instaladoController.clear();
+                retiradoController.clear();
+
+                widget.onRefaccionChanged(widget.ordenData.refaciones);
+              },
+              child: const Text('Agregar'),
+            )
           ],
         ),
       ),

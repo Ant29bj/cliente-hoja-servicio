@@ -127,7 +127,7 @@ class OrdenData {
         mantenimientoEscaner: json["mantenimientoEscaner"],
         mantenimientoImpresora: json["mantenimientoImpresora"],
         mantenimientoTarjetaInterfaz: json["mantenimientoTarjetaInterfaz"],
-        mantenimientoToneleros: json["mantenimientoToneleros"],
+        mantenimientoToneleros: json["mantenimientoToneleros"] as bool ?? false,
         pruebasAceptadorMonedas: json["pruebasAceptadorMonedas"],
         mantenimientoDispensadorBilletes:
             json["mantenimientoDispensadorBilletes"],
